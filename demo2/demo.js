@@ -122,7 +122,7 @@ window.onload = function() {
                             if (enemy[i].x != obj.x - obj.speed) {
                                 ele.style.left = obj.x - obj.speed + "px";
                             } else {
-                                ele.style.left = obj.x - obj.speed + "px";
+                                ele.style.left = obj.x + "px";
                             }
                         }
                     }
@@ -138,7 +138,7 @@ window.onload = function() {
                             if (enemy[i].y != obj.y - obj.speed) {
                                 ele.style.top = obj.y - obj.speed + "px";
                             } else {
-                                ele.style.top = obj.y - obj.speed + "px";
+                                ele.style.top = obj.y + "px";
                             }
                         }
                     }
@@ -154,7 +154,7 @@ window.onload = function() {
                             if (enemy[i].x != obj.x + obj.speed) {
                                 ele.style.left = obj.x + obj.speed + "px";
                             } else {
-                                ele.style.left = obj.x - obj.speed + "px";
+                                ele.style.left = obj.x + "px";
                             }
                         }
                     }
@@ -170,7 +170,7 @@ window.onload = function() {
                             if (enemy[i].y != obj.y + obj.speed) {
                                 ele.style.top = obj.y + obj.speed + "px";
                             } else {
-                                ele.style.top = obj.y - obj.speed + "px";
+                                ele.style.top = obj.y + "px";
                             }
                         }
                     }
