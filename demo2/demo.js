@@ -13,6 +13,7 @@ window.onload = function() {
         this.y = y;
         this.speed = 5;
         this.type = type;
+
     }
     //坦克类
     function Tank(x, y, direction, speed, type) {
@@ -21,6 +22,7 @@ window.onload = function() {
         this.y = y;
         this.type = type;
         this.speed = speed;
+
     }
     // 初始化自己的坦克
     var myTank = new Tank(0, 0, "right", 5, 1);
@@ -32,16 +34,54 @@ window.onload = function() {
     var enemy = [];
     var enemyDiv = [];
     for (var i = 0; i < 10; i++) {
-        enemy[i] = new Tank(200, 200, "down", 1, 0);
+        enemy[i] = new Tank(Math.round(Math.random() * 100) * 7, Math.round(Math.random() * 100) * 5, "down", 1, 0);
         enemyDiv[i] = document.createElement("div");
         enemyDiv[i].classList.add("etk");
         enemyDiv[i].style.top = enemy[i].y + "px";
         enemyDiv[i].style.left = enemy[i].x + "px";
         content.appendChild(enemyDiv[i]);
+        enemy[i].index = enemyDiv[i].index = i;
+        // console.log(enemy[i].index);
         run(enemyDiv[i], enemy[i]);
-        if (i > 0) {
-            moveEnemy(enemyDiv[i], enemy[i], enemy[i - 1]);
-        }
+        moveEnemy(enemyDiv[i], enemy[i]);
+        sendBul(enemy[i]);
+    }
+
+    function sendBul(obj) {
+        console.log(obj);
+        setInterval(function() {
+            if (Math.round(Math.random() * 300) < 2) {
+                var bullet = new Bullet(obj.x, obj.y, obj.direction, 5, obj.type);
+                var myBullet = document.createElement("div");
+                myBullet.classList.add("mbt");
+                switch (obj.direction) {
+                    case "left":
+                        myBullet.style.left = obj.x + "px";
+                        myBullet.style.top = obj.y + 19 + "px";
+                        content.appendChild(myBullet);
+                        moveBullet(myBullet, bullet);
+                        return;
+                    case "up":
+                        myBullet.style.left = obj.x + 20 + "px";
+                        myBullet.style.top = myTank.y + "px";
+                        content.appendChild(myBullet);
+                        moveBullet(myBullet, bullet);
+                        return;
+                    case "right":
+                        myBullet.style.left = obj.x + 40 + "px";
+                        myBullet.style.top = obj.y + 21 + "px";
+                        content.appendChild(myBullet);
+                        moveBullet(myBullet, bullet);
+                        return;
+                    case "down":
+                        myBullet.style.left = obj.x + 20 + "px";
+                        myBullet.style.top = obj.y + 41 + "px";
+                        content.appendChild(myBullet);
+                        moveBullet(myBullet, bullet);
+                        return;
+                }
+            }
+        }, 30);
 
     }
 
@@ -69,46 +109,55 @@ window.onload = function() {
     }
 
 
-    function moveEnemy(ele, obj, preObj) {
+    function moveEnemy(ele, obj) {
         setInterval(function() {
             obj.x = ele.offsetLeft;
             obj.y = ele.offsetTop;
-            console.log(ele.offsetTop);
+            // console.log(ele.offsetTop);
             if (obj.direction === "left") {
                 ele.style.background = "url(images/tl.gif) no-repeat";
                 if (obj.x - obj.speed > 0) {
-                    if (obj.x - obj.speed != preObj.x) {
-                        ele.style.left = obj.x - obj.speed + "px";
-                    } else {
-                        ele.style.left = obj.x + "px";
+                    for (var i = 0; i < enemyDiv.length; i++) {
+                        if (enemyDiv[i].index != ele.index) {
+                            if (enemy[i].x != obj.x - obj.speed) {
+                                ele.style.left = obj.x - obj.speed + "px";
+                            } else {
+                                ele.style.left = obj.x - obj.speed + "px";
+                            }
+                        }
                     }
-
                 } else {
                     ele.style.left = 0 + "px";
                 }
                 return;
             } else if (obj.direction === "up") {
                 ele.style.background = "url(images/tu.gif) no-repeat";
-                if (obj.y - obj.speed > 50) {
-                    if (obj.y - obj.speed != preObj.y) {
-                        ele.style.top = obj.y - obj.speed + "px";
-                    } else {
-                        ele.style.top = obj.y + "px";
+                if (obj.y - obj.speed > 0) {
+                    for (var i = 0; i < enemyDiv.length; i++) {
+                        if (enemyDiv[i].index != ele.index) {
+                            if (enemy[i].y != obj.y - obj.speed) {
+                                ele.style.top = obj.y - obj.speed + "px";
+                            } else {
+                                ele.style.top = obj.y - obj.speed + "px";
+                            }
+                        }
                     }
-
                 } else {
-                    ele.style.top = 50 + "px";
+                    ele.style.top = 0 + "px";
                 }
                 return;
             } else if (obj.direction === "right") {
                 ele.style.background = "url(images/tr.gif) no-repeat";
                 if (obj.x + obj.speed < 750) {
-                    if (obj.x + obj.speed != preObj.x) {
-                        ele.style.left = obj.x + obj.speed + "px";
-                    } else {
-                        ele.style.left = obj.x + "px";
+                    for (var i = 0; i < enemyDiv.length; i++) {
+                        if (enemyDiv[i].index != ele.index) {
+                            if (enemy[i].x != obj.x + obj.speed) {
+                                ele.style.left = obj.x + obj.speed + "px";
+                            } else {
+                                ele.style.left = obj.x - obj.speed + "px";
+                            }
+                        }
                     }
-
                 } else {
                     ele.style.left = 750 + "px";
                 }
@@ -116,16 +165,18 @@ window.onload = function() {
             } else if (obj.direction === "down") {
                 ele.style.background = "url(images/td.gif) no-repeat";
                 if (obj.y + obj.speed < 550) {
-                    if (obj.y + obj.speed != preObj.y) {
-                        ele.style.top = obj.y + obj.speed + "px";
-                    } else {
-                        ele.style.top = obj.y + "px";
+                    for (var i = 0; i < enemyDiv.length; i++) {
+                        if (enemyDiv[i].index != ele.index) {
+                            if (enemy[i].y != obj.y + obj.speed) {
+                                ele.style.top = obj.y + obj.speed + "px";
+                            } else {
+                                ele.style.top = obj.y - obj.speed + "px";
+                            }
+                        }
                     }
-
                 } else {
                     ele.style.top = 550 + "px";
                 }
-                console.log(obj.speed);
                 return;
             }
         }, 30);
